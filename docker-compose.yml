@@ -40,6 +40,8 @@ services:
     command: ['--redis.addr', 'secretsecret@redis:6379']
     ports:
       - "9121:9121"
+    networks:
+      - monitoring
 
 networks:
   monitoring:
