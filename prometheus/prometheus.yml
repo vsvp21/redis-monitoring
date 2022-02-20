@@ -13,7 +13,3 @@ scrape_configs:
     static_configs:
       - targets:
         - "redis-exporter:9121"
-  - job_name: clickhouse-exporter
-    scrape_interval: 5s
-    static_configs:
-      - targets: ["clickhouse-exporter:9116"]
