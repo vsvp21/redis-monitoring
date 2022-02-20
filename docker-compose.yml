@@ -1,0 +1,46 @@
+version: '3.9'
+services:
+  redis:
+    image: bitnami/redis:latest
+    container_name: redis
+    restart: always
+    volumes:
+      - ./redis/redis-data:/bitnami/redis/data
+      - ./redis:/usr/local/etc/redis
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_PASSWORD=secretsecret
+      - REDIS_REPLICATION_MODE=master
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana-enterprise
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - monitoring
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - monitoring
+
+  redis-exporter:
+    image: oliver006/redis_exporter:alpine
+    container_name: redis-exporter
+    restart: unless-stopped
+    command: ['--redis.addr', 'secretsecret@redis:6379']
+    ports:
+      - "9121:9121"
+
+networks:
+  monitoring:
+    driver: bridge
